@@ -14,7 +14,7 @@ The overall structure of the code, and the format of the input and output files,
 * “Magnetic field reversals and long-time memory in conducting flows”, P. Dmitruk, P.D. Mininni, A. Pouquet, S. Servidio, and W.H. Matthaeus, Physical Review E 90, 043010 (2014), 
 * “Magnetic structure, dipole reversals, and 1/f noise in resistive MHD spherical dynamos,” M. Fontana, P. Dmitruk, and P.D. Mininni, Physical Review Fluids 3, 123702 (2018).
 
-Compilation of SPHERE only requires and MPI library. Paths for the compilers and the MPI library are set in "makefile", as well as other options such as the number of Chandrasekhar-Kendall modes to be used in the computations. Then, the following options build the three tools available:
+Compilation of SPHERE only requires and MPI library. Paths for the compilers and the MPI library are set in "makefile". Then, the following options build the three tools available:
 
 * make create: Builds the executable that computes tables with Chandrasekhar-Kendall modes and their coupling coefficients. These tables are required by all other tools to evolve the HD and MHD equations inside the sphere. More details about the input file required to execute this tool, and the output files created afterwards can be found in "create_tables.f90".
 
