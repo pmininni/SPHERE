@@ -1,2 +1,23 @@
 # SPHERE
-SPHERE (SPectral cHandrasEkhaR-kEndall spherical code) is an accurate research code to solve the magnetohydrodynamic (MHD) equations inside spheres, using a pure spectral method
+SPHERE (SPectral cHandrasEkhaR-kEndall spherical code) is an accurate research code to solve the hydrodynamic (HD) and magnetohydrodynamic (MHD) equations inside spheres, using a purely spectral method.
+
+SPHERE uses an orthonormal basis of spherical Chandrasekhar-Kendall functions, which are eigenfunctions of the curl operator. Runge-Kutta of adjustable order is used to evolve the system in time (the order of the integrator is set in the module 'rungekutta'). To speed up computations, the code uses external tables with coupling coefficients (created by "CREATE_TABLES") to compute the nonlinear and Coriolis terms. The tolerance used to compute integrals in the coupling coefficients can be set in the module 'constants'.
+
+Two set of equations can be used: the incompressible Navier-Stokes equations (HD), and the incompressible magnetohydrodynamic equations (MHD). In both cases, the fluid fills a sphere of radius R=1, and the boundary conditions in the rotating frame are u.n=w.n=0 (no velocity and vorticity parallel to the surface of the sphere). For the magnetic field, the medium outside the sphere is a perfect conductor, with b.n=j.n=0 in the sphere (no magnetic field and current density parallel to the surface of the sphere). Options to control the rotation rate of the sphere, as well as its precession, are provided. SPHERE was mostly developed to study dynamo action in spherical domains, although other flows (such as, e.g., rotating flows in precessing spherical vessels) can be easily considered.
+
+Since SPHERE is purely spectral, it is highly accurate, and it can integrate both sets of equations (even in the ideal case, in the absence of viscosity, magnetic diffusivity, and external forcings) while conserving all quadratic invariants of the physical systems for very long times. The cost for the implementation of a purely spectral method is that only moderate spatial resolutions can be considered. The implementation of convolutions to compute nonlinear terms becomes prohibitively expensive as spatial resolution is increased. In spite of this, the code is parallelized using MPI, and scales well in most parallel environments.
+
+The overall structure of the code, and the format of the input and output files, are very similar to old version of GHOST (see https://github.com/pmininni/GHOST). Details of the code, and examples of applications, can be found in the following publications:
+
+* “Magnetohydrodynamic activity inside a sphere,” P.D. Mininni and D.C. Montgomery, Physics of Fluids 18, 116601 (2006).
+* “Hydrodynamic and magnetohydrodynamic computations inside a rotating sphere,” P.D. Mininni, D.C. Montgomery, and L. Turner, New Journal of Physics 9, 303 (2007).
+* “Magnetic field reversals and long-time memory in conducting flows”, P. Dmitruk, P.D. Mininni, A. Pouquet, S. Servidio, and W.H. Matthaeus, Physical Review E 90, 043010 (2014), 
+* “Magnetic structure, dipole reversals, and 1/f noise in resistive MHD spherical dynamos,” M. Fontana, P. Dmitruk, and P.D. Mininni, Physical Review Fluids 3, 123702 (2018).
+
+Compilation of SPHERE only requires and MPI library. Paths for the compilers and the MPI library are set in "makefile", as well as other options such as the number of Chandrasekhar-Kendall modes to be used in the computations. Then, the following options build the three tools available:
+
+* make create: Builds the executable that computes tables with Chandrasekhar-Kendall modes and their coupling coefficients. These tables are required by all other tools to evolve the HD and MHD equations inside the sphere. More details about the input file required to execute this tool, and the output files created afterwards can be found in "create_tables.f90".
+
+* make shd: Builds the executable to evolve the HD equations inside the sphere. This executable reads the tables created by "create", and an input file with parameters, and writes files with the time evolution of the HD equations as a function of time. More details about the input and output files can be found in "sphere_hd.f90".
+
+* make smhd: Builds the executable to evolve the MHD equations inside the sphere. As before, tables with coupling coefficients must be created beforehand, and input and output files are described in "sphere_mhd.f90".
